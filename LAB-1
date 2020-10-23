@@ -1,0 +1,141 @@
+**Schema (MySQL v5.7)**
+
+    create table PUBLISHER(name varchar(10),address varchar(10),phone varchar(20),primary key(name));
+    create table BOOK(book_id integer,title varchar(10),publisher_name varchar(10),pub_year integer,primary key(book_id),foreign key(publisher_name)references PUBLISHER(name) ON DELETE CASCADE);
+    create table BOOK_AUTHOR(book_id integer,author_name varchar(10),foreign key(book_id)references BOOK(book_id) ON DELETE CASCADE);  
+    create table LIBRARY_PROGRAMME(programme_id varchar(10),programme_name varchar(20),address varchar(10),primary key(programme_id));
+    create table BOOK_COPIES(book_id integer,programme_id varchar(10),no_of_copies integer,foreign key(book_id)references BOOK(book_id) ON DELETE CASCADE,foreign key(programme_id)references LIBRARY_PROGRAMME(programme_id) ON DELETE CASCADE); 
+    create table BOOK_LENDING(book_id integer,programme_id varchar(10),card_no integer,date_out varchar(10),due_date varchar(10),foreign key(book_id)references BOOK(book_id) ON DELETE CASCADE,foreign key(programme_id)references LIBRARY_PROGRAMME(programme_id) ON DELETE CASCADE);
+    insert into PUBLISHER values('Mc graw','Banglore','9696500001');
+    insert into PUBLISHER values('Person','Banglore','9595950000');
+    insert into PUBLISHER values('Sam Pub','Banglore','9494940000');
+    insert into PUBLISHER values('IOP','Mumbai','9797970000');
+    insert into PUBLISHER values('IEEE','Delhi','9090900000');
+    insert into BOOK values(10,'DBMS','Mc graw',2010);
+    insert into BOOK values(20,'SE','Person',2008);
+    insert into BOOK values(30,'FLAT','Sam Pub',2019);
+    insert into BOOK values(40,'BDA','IOP',2018);
+    insert into BOOK values(50,'MP','IEEE',2020);
+    insert into BOOK_AUTHOR values(10,'Andrew');
+    insert into BOOK_AUTHOR values(20,'Raj Kumar');
+    insert into BOOK_AUTHOR values(30,'Samuel');
+    insert into BOOK_AUTHOR values(40,'Padma');
+    insert into BOOK_AUTHOR values(50,'Guru');
+    insert into LIBRARY_PROGRAMME values('100','Main Building','Manglore');
+    insert into LIBRARY_PROGRAMME values('200','Ground Floor','Banglore');
+    insert into LIBRARY_PROGRAMME values('300','1st Floor','Banglore');
+    insert into LIBRARY_PROGRAMME values('400','Research Building','Udupi');
+    insert into LIBRARY_PROGRAMME values('500','OPD Building','Manipal');
+    insert into BOOK_COPIES values(10,'100',20);
+    insert into BOOK_COPIES values(30,'100',30);
+    insert into BOOK_COPIES values(10,'200',5);
+    insert into BOOK_COPIES values(20,'300',15);
+    insert into BOOK_COPIES values(40,'500',7);
+    insert into BOOK_LENDING values(10,100,201, '2017-06-15', '2020-06-25'); 
+    insert into BOOK_LENDING values(20,200,202, '2017-05-10', '2017-05-20');   
+    insert into BOOK_LENDING values(30,300,203, '2017-07-25', '2020-07-30');
+    insert into BOOK_LENDING values(40,400,204, '2017-08-14', '2020-08-26'); 
+    insert into BOOK_LENDING values(50,500,205, '2017-09-01', '2020-09-10');
+    insert into BOOK_LENDING values(10,100,202, '2017-05-11', '2017-05-21');
+    insert into BOOK_LENDING values(30,300,202, '2017-05-13', '2017-05-22'); 
+    insert into BOOK_LENDING values(50,500,202, '2017-04-10', '2017-04-20'); 
+    
+    
+
+---
+
+**Query #1**
+
+    Select B.book_id,title,publisher_name,author_name,programme_id,no_of_Copies From BOOK B,BOOK_AUTHOR BA,BOOK_COPIES BC where B.book_id=BA.book_id and B.book_id=BC.book_id;
+
+| book_id | title | publisher_name | author_name | programme_id | no_of_Copies |
+| ------- | ----- | -------------- | ----------- | ------------ | ------------ |
+| 10      | DBMS  | Mc graw        | Andrew      | 100          | 20           |
+| 30      | FLAT  | Sam Pub        | Samuel      | 100          | 30           |
+| 10      | DBMS  | Mc graw        | Andrew      | 200          | 5            |
+| 20      | SE    | Person         | Raj Kumar   | 300          | 15           |
+| 40      | BDA   | IOP            | Padma       | 500          | 7            |
+
+---
+**Query #2**
+
+    Select card_no From BOOK_LENDING where date_out between '2017-01-01' and '2017-06-01' group by card_no having count(card_no)>3;
+
+| card_no |
+| ------- |
+| 202     |
+
+---
+**Query #3**
+
+    Delete from BOOK where book_id=20;
+
+There are no results to be displayed.
+
+---
+**Query #4**
+
+    select *from BOOK;
+
+| book_id | title | publisher_name | pub_year |
+| ------- | ----- | -------------- | -------- |
+| 10      | DBMS  | Mc graw        | 2010     |
+| 30      | FLAT  | Sam Pub        | 2019     |
+| 40      | BDA   | IOP            | 2018     |
+| 50      | MP    | IEEE           | 2020     |
+
+---
+**Query #5**
+
+    select *from BOOK_AUTHOR;
+
+| book_id | author_name |
+| ------- | ----------- |
+| 10      | Andrew      |
+| 30      | Samuel      |
+| 40      | Padma       |
+| 50      | Guru        |
+
+---
+**Query #6**
+
+    select *from LIBRARY_PROGRAMME;
+
+| programme_id | programme_name    | address  |
+| ------------ | ----------------- | -------- |
+| 100          | Main Building     | Manglore |
+| 200          | Ground Floor      | Banglore |
+| 300          | 1st Floor         | Banglore |
+| 400          | Research Building | Udupi    |
+| 500          | OPD Building      | Manipal  |
+
+---
+**Query #7**
+
+    select *from BOOK_COPIES;
+
+| book_id | programme_id | no_of_copies |
+| ------- | ------------ | ------------ |
+| 10      | 100          | 20           |
+| 30      | 100          | 30           |
+| 10      | 200          | 5            |
+| 40      | 500          | 7            |
+
+---
+**Query #8**
+
+    select *from BOOK_LENDING;
+
+| book_id | programme_id | card_no | date_out   | due_date   |
+| ------- | ------------ | ------- | ---------- | ---------- |
+| 10      | 100          | 201     | 2017-06-15 | 2020-06-25 |
+| 30      | 300          | 203     | 2017-07-25 | 2020-07-30 |
+| 40      | 400          | 204     | 2017-08-14 | 2020-08-26 |
+| 50      | 500          | 205     | 2017-09-01 | 2020-09-10 |
+| 10      | 100          | 202     | 2017-05-11 | 2017-05-21 |
+| 30      | 300          | 202     | 2017-05-13 | 2017-05-22 |
+| 50      | 500          | 202     | 2017-04-10 | 2017-04-20 |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/2kkc3ah6qxZmFEeiRmPrmC/1)
