@@ -39,8 +39,6 @@
     insert into BOOK_LENDING values(10,100,202, '2017-05-11', '2017-05-21');
     insert into BOOK_LENDING values(30,300,202, '2017-05-13', '2017-05-22'); 
     insert into BOOK_LENDING values(50,500,202, '2017-04-10', '2017-04-20'); 
-    
-    
 
 ---
 
@@ -75,6 +73,13 @@ There are no results to be displayed.
 ---
 **Query #4**
 
+    create view v1 as select B.book_id,sum(no_of_copies) From BOOK B,BOOK_COPIES BC where B.book_id=BC.book_id group by book_id;
+
+There are no results to be displayed.
+
+---
+**Query #5**
+
     select *from BOOK;
 
 | book_id | title | publisher_name | pub_year |
@@ -85,7 +90,7 @@ There are no results to be displayed.
 | 50      | MP    | IEEE           | 2020     |
 
 ---
-**Query #5**
+**Query #6**
 
     select *from BOOK_AUTHOR;
 
@@ -97,7 +102,7 @@ There are no results to be displayed.
 | 50      | Guru        |
 
 ---
-**Query #6**
+**Query #7**
 
     select *from LIBRARY_PROGRAMME;
 
@@ -110,7 +115,7 @@ There are no results to be displayed.
 | 500          | OPD Building      | Manipal  |
 
 ---
-**Query #7**
+**Query #8**
 
     select *from BOOK_COPIES;
 
@@ -122,7 +127,7 @@ There are no results to be displayed.
 | 40      | 500          | 7            |
 
 ---
-**Query #8**
+**Query #9**
 
     select *from BOOK_LENDING;
 
@@ -137,5 +142,16 @@ There are no results to be displayed.
 | 50      | 500          | 202     | 2017-04-10 | 2017-04-20 |
 
 ---
+**Query #10**
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/2kkc3ah6qxZmFEeiRmPrmC/1)
+    select * from v1;
+
+| book_id | sum(no_of_copies) |
+| ------- | ----------------- |
+| 10      | 25                |
+| 30      | 30                |
+| 40      | 7                 |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/6jxEkDK36uAUBrzg1xZkd/3)
