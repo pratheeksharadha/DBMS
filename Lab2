@@ -1,1 +1,11 @@
+**Schema (MySQL v5.7)**
 
+    create table SALESMAN(salesman_id integer,name varchar(20),city varchar(20),commission integer,primary key(salesman_id));
+    create table CUSTOMER(customer_id integer,cust_name varchar(20),city varchar(20),grade integer,salesman_id integer,primary key(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
+    create table ORDERS(ord_no integer,purchase_amt integer,ord_date varchar(10),customer_id integer,salesman_id integer,primary key(ord_no),foreign key(customer_id) references CUSTOMER(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
+    
+
+---
+
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/0)
