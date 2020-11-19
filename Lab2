@@ -3,9 +3,39 @@
     create table SALESMAN(salesman_id integer,name varchar(20),city varchar(20),commission integer,primary key(salesman_id));
     create table CUSTOMER(customer_id integer,cust_name varchar(20),city varchar(20),grade integer,salesman_id integer,primary key(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
     create table ORDERS(ord_no integer,purchase_amt integer,ord_date varchar(10),customer_id integer,salesman_id integer,primary key(ord_no),foreign key(customer_id) references CUSTOMER(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
-    
+    insert into SALESMAN values(10,'akash','manglore',2);
+    insert into SALESMAN values(20,'ram','banglore',10);
+    insert into SALESMAN values(30,'raj','manglore',5);
+    insert into SALESMAN values(40,'kiran','mysore',15);
+    insert into CUSTOMER values(1000,'avinash','manglore',100,10);
+    insert into CUSTOMER values(2000,'kumar','banglore',200,20);
+    insert into CUSTOMER values(3000,'preethi','mysore',300,40);
+    insert into CUSTOMER values(4000,'smitha','manglore',400,30);
+    insert into ORDERS values(551,500,'4-Jan-20',1000,10);
+    insert into ORDERS values(552,2500,'5-Feb-20',2000,20);
+    insert into ORDERS values(553,500,'3-Mar-20',3000,40);
+    insert into ORDERS values(554,1500,'2-Apr-20',4000,30);
+    insert into ORDERS values(555,2000,'3-Jun-20',2000,10);
 
 ---
 
+**Query #1**
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/0)
+    select S.salesman_id,name from SALESMAN S where 1<(select count(*) from ORDERS O where S.salesman_id=O.salesman_id);
+
+| salesman_id | name  |
+| ----------- | ----- |
+| 10          | akash |
+
+---
+**Query #2**
+
+    select S.salesman_id,S.name from SALESMAN S where S.salesman_id in(select O.salesman_id from ORDERS O where O.salesman_id=S.salesman_id group by O.salesman_id having count(*)>1 );
+
+| salesman_id | name  |
+| ----------- | ----- |
+| 10          | akash |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/1)
