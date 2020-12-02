@@ -1,8 +1,8 @@
 **Schema (MySQL v5.7)**
 
     create table SALESMAN(salesman_id integer,name varchar(20),city varchar(20),commission integer,primary key(salesman_id));
-    create table CUSTOMER(customer_id integer,cust_name varchar(20),city varchar(20),grade integer,salesman_id integer,primary key(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
-    create table ORDERS(ord_no integer,purchase_amt integer,ord_date varchar(10),customer_id integer,salesman_id integer,primary key(ord_no),foreign key(customer_id) references CUSTOMER(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id));
+    create table CUSTOMER(customer_id integer,cust_name varchar(20),city varchar(20),grade integer,salesman_id integer,primary key(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id)on delete cascade);
+    create table ORDERS(ord_no integer,purchase_amt integer,ord_date varchar(10),customer_id integer,salesman_id integer,primary key(ord_no),foreign key(customer_id) references CUSTOMER(customer_id) on delete cascade,foreign key(salesman_id) references SALESMAN(salesman_id)on delete cascade);
     insert into SALESMAN values(10,'akash','manglore',2);
     insert into SALESMAN values(20,'ram','banglore',10);
     insert into SALESMAN values(30,'raj','manglore',5);
@@ -16,25 +16,122 @@
     insert into ORDERS values(553,500,'3-Mar-20',3000,40);
     insert into ORDERS values(554,1500,'2-Apr-20',4000,30);
     insert into ORDERS values(555,2000,'3-Jun-20',2000,10);
+    insert into ORDERS values(556,3500,'3-01-2020',2000,30)
 
 ---
 
 **Query #1**
 
-    select S.salesman_id,name from SALESMAN S where 1<(select count(*) from ORDERS O where S.salesman_id=O.salesman_id);
+    SELECT name , salesman_id
+    FROM SALESMAN S
+    WHERE 1<
+    (SELECT COUNT(*)
+     FROM ORDERS O
+     WHERE S.salesman_id=O.salesman_id);
 
-| salesman_id | name  |
-| ----------- | ----- |
-| 10          | akash |
+| name  | salesman_id |
+| ----- | ----------- |
+| akash | 10          |
+| raj   | 30          |
 
 ---
 **Query #2**
 
-    select S.salesman_id,S.name from SALESMAN S where S.salesman_id in(select O.salesman_id from ORDERS O where O.salesman_id=S.salesman_id group by O.salesman_id having count(*)>1 );
+    UPDATE CUSTOMER SET grade=400 WHERE customer_id=1000;
 
-| salesman_id | name  |
-| ----------- | ----- |
-| 10          | akash |
+There are no results to be displayed.
+
+---
+**Query #3**
+
+    SELECT c.grade,COUNT(*)
+    FROM CUSTOMER c 
+    WHERE grade>
+    (SELECT AVG(grade) 
+     FROM CUSTOMER c 
+     WHERE c.city='BANGALORE')
+    GROUP BY c.grade;
+
+There are no results to be displayed.
+
+---
+**Query #4**
+
+    SELECT * 
+    FROM SALESMAN
+    WHERE salesman_id IN(
+    SELECT salesman_id
+    FROM SALESMAN S
+    WHERE EXISTS
+      (SELECT  salesman_id
+       FROM CUSTOMER C 
+       WHERE S.city=C.city AND S.salesman_id=C.salesman_id)
+                      UNION
+    SELECT salesman_id
+    FROM SALESMAN S
+    WHERE NOT EXISTS
+      (SELECT  salesman_id
+       FROM CUSTOMER C 
+       WHERE S.city=C.city AND S.salesman_id=C.salesman_id));
+
+| salesman_id | name  | city     | commission |
+| ----------- | ----- | -------- | ---------- |
+| 10          | akash | manglore | 2          |
+| 20          | ram   | banglore | 10         |
+| 30          | raj   | manglore | 5          |
+| 40          | kiran | mysore   | 15         |
+
+---
+**Query #5**
+
+    CREATE VIEW V1 AS
+    SELECT salesman_id
+    FROM ORDERS
+    GROUP BY ord_date
+    HAVING MAX(ord_date);
+
+There are no results to be displayed.
+
+---
+**Query #6**
+
+    DELETE FROM SALESMAN WHERE salesman_id=10;
+
+There are no results to be displayed.
+
+---
+**Query #7**
+
+    SELECT * FROM SALESMAN;
+
+| salesman_id | name  | city     | commission |
+| ----------- | ----- | -------- | ---------- |
+| 20          | ram   | banglore | 10         |
+| 30          | raj   | manglore | 5          |
+| 40          | kiran | mysore   | 15         |
+
+---
+**Query #8**
+
+    SELECT * FROM CUSTOMER;
+
+| customer_id | cust_name | city     | grade | salesman_id |
+| ----------- | --------- | -------- | ----- | ----------- |
+| 2000        | kumar     | banglore | 200   | 20          |
+| 3000        | preethi   | mysore   | 300   | 40          |
+| 4000        | smitha    | manglore | 400   | 30          |
+
+---
+**Query #9**
+
+    SELECT * FROM ORDERS;
+
+| ord_no | purchase_amt | ord_date  | customer_id | salesman_id |
+| ------ | ------------ | --------- | ----------- | ----------- |
+| 552    | 2500         | 5-Feb-20  | 2000        | 20          |
+| 553    | 500          | 3-Mar-20  | 3000        | 40          |
+| 554    | 1500         | 2-Apr-20  | 4000        | 30          |
+| 556    | 3500         | 3-01-2020 | 2000        | 30          |
 
 ---
 
