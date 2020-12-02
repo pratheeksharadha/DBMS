@@ -16,23 +16,21 @@
     insert into ORDERS values(553,500,'3-Mar-20',3000,40);
     insert into ORDERS values(554,1500,'2-Apr-20',4000,30);
     insert into ORDERS values(555,2000,'3-Jun-20',2000,10);
-    insert into ORDERS values(556,3500,'3-01-2020',2000,30)
 
 ---
 
 **Query #1**
 
     SELECT name , salesman_id
-    FROM SALESMAN S
-    WHERE 1<
-    (SELECT COUNT(*)
-     FROM ORDERS O
-     WHERE S.salesman_id=O.salesman_id);
+        FROM SALESMAN S
+        WHERE 1<
+        (SELECT COUNT(*)
+         FROM ORDERS O
+         WHERE S.salesman_id=O.salesman_id);
 
 | name  | salesman_id |
 | ----- | ----------- |
 | akash | 10          |
-| raj   | 30          |
 
 ---
 **Query #2**
@@ -45,12 +43,12 @@ There are no results to be displayed.
 **Query #3**
 
     SELECT c.grade,COUNT(*)
-    FROM CUSTOMER c 
-    WHERE grade>
-    (SELECT AVG(grade) 
-     FROM CUSTOMER c 
-     WHERE c.city='BANGALORE')
-    GROUP BY c.grade;
+        FROM CUSTOMER c 
+        WHERE grade>
+        (SELECT AVG(grade) 
+         FROM CUSTOMER c 
+         WHERE c.city='BANGALORE')
+        GROUP BY c.grade;
 
 There are no results to be displayed.
 
@@ -58,21 +56,21 @@ There are no results to be displayed.
 **Query #4**
 
     SELECT * 
-    FROM SALESMAN
-    WHERE salesman_id IN(
-    SELECT salesman_id
-    FROM SALESMAN S
-    WHERE EXISTS
-      (SELECT  salesman_id
-       FROM CUSTOMER C 
-       WHERE S.city=C.city AND S.salesman_id=C.salesman_id)
-                      UNION
-    SELECT salesman_id
-    FROM SALESMAN S
-    WHERE NOT EXISTS
-      (SELECT  salesman_id
-       FROM CUSTOMER C 
-       WHERE S.city=C.city AND S.salesman_id=C.salesman_id));
+        FROM SALESMAN
+        WHERE salesman_id IN(
+        SELECT salesman_id
+        FROM SALESMAN S
+        WHERE EXISTS
+          (SELECT  salesman_id
+           FROM CUSTOMER C 
+           WHERE S.city=C.city AND S.salesman_id=C.salesman_id)
+                          UNION
+        SELECT salesman_id
+        FROM SALESMAN S
+        WHERE NOT EXISTS
+          (SELECT  salesman_id
+           FROM CUSTOMER C 
+           WHERE S.city=C.city AND S.salesman_id=C.salesman_id));
 
 | salesman_id | name  | city     | commission |
 | ----------- | ----- | -------- | ---------- |
@@ -85,10 +83,10 @@ There are no results to be displayed.
 **Query #5**
 
     CREATE VIEW V1 AS
-    SELECT salesman_id
-    FROM ORDERS
-    GROUP BY ord_date
-    HAVING MAX(ord_date);
+        SELECT salesman_id
+        FROM ORDERS
+        GROUP BY ord_date
+        HAVING MAX(ord_date);
 
 There are no results to be displayed.
 
@@ -126,13 +124,12 @@ There are no results to be displayed.
 
     SELECT * FROM ORDERS;
 
-| ord_no | purchase_amt | ord_date  | customer_id | salesman_id |
-| ------ | ------------ | --------- | ----------- | ----------- |
-| 552    | 2500         | 5-Feb-20  | 2000        | 20          |
-| 553    | 500          | 3-Mar-20  | 3000        | 40          |
-| 554    | 1500         | 2-Apr-20  | 4000        | 30          |
-| 556    | 3500         | 3-01-2020 | 2000        | 30          |
+| ord_no | purchase_amt | ord_date | customer_id | salesman_id |
+| ------ | ------------ | -------- | ----------- | ----------- |
+| 552    | 2500         | 5-Feb-20 | 2000        | 20          |
+| 553    | 500          | 3-Mar-20 | 3000        | 40          |
+| 554    | 1500         | 2-Apr-20 | 4000        | 30          |
 
 ---
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/1)
+[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/2)
