@@ -1,0 +1,115 @@
+**Schema (MySQL v5.7)**
+
+    create table ACTOR(act_id integer,act_name varchar(20),act_gender varchar(10), primary key(act_id));
+    create table DIRECTOR(dir_id integer,dir_name varchar(20),dir_phone varchar(10),primary key(dir_id));
+    create table MOVIES(mov_id integer,mov_title varchar(20),mov_year integer,mov_lang varchar(10),dir_id integer,primary key(mov_id), foreign key(dir_id) references DIRECTOR(dir_id) on delete cascade);
+    create table MOVIE_CAST(act_id integer,mov_id integer,role varchar(20),primary key(act_id,mov_id), foreign key(act_id) references ACTOR(act_id) on delete cascade,foreign key(mov_id) references MOVIES(mov_id) on delete cascade); 
+    create table RATING(mov_id integer,rev_stars integer,primary key(mov_id),foreign key(mov_id)references MOVIES(mov_id) on delete cascade); 
+    insert into ACTOR values(101,'Rahul','Male'); 
+    insert into ACTOR values(102,'Sneha','Female');  
+    insert into ACTOR values(103,'Ramesh','Male'); 
+    insert into ACTOR values(104,'Sahana','Female');
+    insert into ACTOR values(105,'Gayan','Male');   
+    insert into DIRECTOR values(11,'Hitchcock','9847569337');  
+    insert into DIRECTOR values(12,'Suhan','9274997667');
+    insert into DIRECTOR values(13,'Swarna','8847562537');
+    insert into DIRECTOR values(14,'Hitchcock','7547569357');
+    insert into DIRECTOR values(15,'Sujith','7656562227');
+    insert into MOVIES values(501,'XYZ',2000,'english',11);
+    insert into MOVIES values(502,'ABC',2005,'hindi',13);
+    insert into MOVIES values(503,'PQR',2002,'kannada',11);
+    insert into MOVIES values(504,'RST',2019,'english',14);
+    insert into MOVIES values(505,'EFG',2006,'kannada',15); 
+    insert into MOVIE_CAST values(101,503,'hero'); 
+    insert into MOVIE_CAST values(102,501,'heroine');
+    insert into MOVIE_CAST values(103,505,'villan');
+    insert into MOVIE_CAST values(104,502,'side_actor');
+    insert into MOVIE_CAST values(105,504,'side_actor');
+    insert into RATING values(501,3);  
+    insert into RATING values(502,5);
+    insert into RATING values(503,2);
+    insert into RATING values(504,5);
+    insert into RATING values(505,4);                                                                                             
+
+---
+
+**Query #1**
+
+    select * from ACTOR;
+
+| act_id | act_name | act_gender |
+| ------ | -------- | ---------- |
+| 101    | Rahul    | Male       |
+| 102    | Sneha    | Female     |
+| 103    | Ramesh   | Male       |
+| 104    | Sahana   | Female     |
+| 105    | Gayan    | Male       |
+
+---
+**Query #2**
+
+    select * from DIRECTOR;
+
+| dir_id | dir_name  | dir_phone  |
+| ------ | --------- | ---------- |
+| 11     | Hitchcock | 9847569337 |
+| 12     | Suhan     | 9274997667 |
+| 13     | Swarna    | 8847562537 |
+| 14     | Hitchcock | 7547569357 |
+| 15     | Sujith    | 7656562227 |
+
+---
+**Query #3**
+
+    select * from MOVIES;
+
+| mov_id | mov_title | mov_year | mov_lang | dir_id |
+| ------ | --------- | -------- | -------- | ------ |
+| 501    | XYZ       | 2000     | english  | 11     |
+| 502    | ABC       | 2005     | hindi    | 13     |
+| 503    | PQR       | 2002     | kannada  | 11     |
+| 504    | RST       | 2019     | english  | 14     |
+| 505    | EFG       | 2006     | kannada  | 15     |
+
+---
+**Query #4**
+
+    select * from MOVIE_CAST;
+
+| act_id | mov_id | role       |
+| ------ | ------ | ---------- |
+| 101    | 503    | hero       |
+| 102    | 501    | heroine    |
+| 103    | 505    | villan     |
+| 104    | 502    | side_actor |
+| 105    | 504    | side_actor |
+
+---
+**Query #5**
+
+    select * from RATING;
+
+| mov_id | rev_stars |
+| ------ | --------- |
+| 501    | 3         |
+| 502    | 5         |
+| 503    | 2         |
+| 504    | 5         |
+| 505    | 4         |
+
+---
+**Query #6**
+
+    select mov_title
+    from MOVIES M,DIRECTOR D
+    where M.dir_id=D.dir_id and D.dir_name='Hitchcock';
+
+| mov_title |
+| --------- |
+| XYZ       |
+| PQR       |
+| RST       |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/0)
