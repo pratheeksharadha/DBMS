@@ -16,15 +16,15 @@
     insert into DIRECTOR values(14,'Hitchcock','7547569357');
     insert into DIRECTOR values(15,'Sujith','7656562227');
     insert into MOVIES values(501,'XYZ',2000,'english',11);
-    insert into MOVIES values(502,'ABC',2005,'hindi',13);
-    insert into MOVIES values(503,'PQR',2002,'kannada',11);
-    insert into MOVIES values(504,'RST',2019,'english',14);
-    insert into MOVIES values(505,'EFG',2006,'kannada',15); 
-    insert into MOVIE_CAST values(101,503,'hero'); 
-    insert into MOVIE_CAST values(102,501,'heroine');
+    insert into MOVIES values(502,'ABC',2017,'hindi',13);
+    insert into MOVIES values(503,'PQR',2003,'kannada',11);
+    insert into MOVIES values(504,'RST',1998,'english',14);
+    insert into MOVIES values(505,'EFG',1999,'kannada',15); 
+    insert into MOVIE_CAST values(101,504,'hero'); 
+    insert into MOVIE_CAST values(102,502,'heroine');
     insert into MOVIE_CAST values(103,505,'villan');
-    insert into MOVIE_CAST values(104,502,'side_actor');
-    insert into MOVIE_CAST values(105,504,'side_actor');
+    insert into MOVIE_CAST values(103,502,'side_actor');
+    insert into MOVIE_CAST values(102,504,'side_actor');
     insert into RATING values(501,3);  
     insert into RATING values(502,5);
     insert into RATING values(503,2);
@@ -35,74 +35,9 @@
 
 **Query #1**
 
-    select * from ACTOR;
-
-| act_id | act_name | act_gender |
-| ------ | -------- | ---------- |
-| 101    | Rahul    | Male       |
-| 102    | Sneha    | Female     |
-| 103    | Ramesh   | Male       |
-| 104    | Sahana   | Female     |
-| 105    | Gayan    | Male       |
-
----
-**Query #2**
-
-    select * from DIRECTOR;
-
-| dir_id | dir_name  | dir_phone  |
-| ------ | --------- | ---------- |
-| 11     | Hitchcock | 9847569337 |
-| 12     | Suhan     | 9274997667 |
-| 13     | Swarna    | 8847562537 |
-| 14     | Hitchcock | 7547569357 |
-| 15     | Sujith    | 7656562227 |
-
----
-**Query #3**
-
-    select * from MOVIES;
-
-| mov_id | mov_title | mov_year | mov_lang | dir_id |
-| ------ | --------- | -------- | -------- | ------ |
-| 501    | XYZ       | 2000     | english  | 11     |
-| 502    | ABC       | 2005     | hindi    | 13     |
-| 503    | PQR       | 2002     | kannada  | 11     |
-| 504    | RST       | 2019     | english  | 14     |
-| 505    | EFG       | 2006     | kannada  | 15     |
-
----
-**Query #4**
-
-    select * from MOVIE_CAST;
-
-| act_id | mov_id | role       |
-| ------ | ------ | ---------- |
-| 101    | 503    | hero       |
-| 102    | 501    | heroine    |
-| 103    | 505    | villan     |
-| 104    | 502    | side_actor |
-| 105    | 504    | side_actor |
-
----
-**Query #5**
-
-    select * from RATING;
-
-| mov_id | rev_stars |
-| ------ | --------- |
-| 501    | 3         |
-| 502    | 5         |
-| 503    | 2         |
-| 504    | 5         |
-| 505    | 4         |
-
----
-**Query #6**
-
-    select mov_title
-    from MOVIES M,DIRECTOR D
-    where M.dir_id=D.dir_id and D.dir_name='Hitchcock';
+    select M.mov_title
+    from DIRECTOR D,MOVIES M
+    where D.dir_id = M.dir_id and D.dir_name='HITCHCOCK';
 
 | mov_title |
 | --------- |
@@ -111,5 +46,24 @@
 | RST       |
 
 ---
+**Query #2**
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/0)
+    select M.mov_title
+    from MOVIES M,MOVIE_CAST MC
+    where M.mov_id=MC.mov_id and MC.act_id
+    in 
+    (select MC.act_id
+            from MOVIE_CAST 
+            group by MC.act_id
+            having count(*)>1 )
+    group by M.mov_id
+    having count(*)>1 ;
+
+| mov_title |
+| --------- |
+| ABC       |
+| RST       |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/4)
