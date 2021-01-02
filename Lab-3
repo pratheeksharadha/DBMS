@@ -50,10 +50,9 @@
 
     select M.mov_title
     from MOVIES M,MOVIE_CAST MC
-    where M.mov_id=MC.mov_id and MC.act_id
-    in 
-    (select MC.act_id
-            from MOVIE_CAST 
+    where M.mov_id=MC.mov_id AND MC.act_id IN 
+           (select MC.act_id
+            from MOVIE_CAST
             group by MC.act_id
             having count(*)>1 )
     group by M.mov_id
@@ -65,5 +64,83 @@
 | RST       |
 
 ---
+**Query #3**
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/4)
+    SELECT MOV_TITLE,REV_STARS
+    FROM MOVIES M,RATING R
+    WHERE M.MOV_ID=R.MOV_ID AND REV_STARS>1
+    ORDER BY MOV_TITLE;
+
+| MOV_TITLE | REV_STARS |
+| --------- | --------- |
+| ABC       | 5         |
+| EFG       | 4         |
+| PQR       | 2         |
+| RST       | 5         |
+| XYZ       | 3         |
+
+---
+**Query #4**
+
+    SELECT MOV_TITLE , REV_STARS
+    FROM MOVIES M,RATING R
+    WHERE M.MOV_ID=R.MOV_ID AND REV_STARS IN
+    	(SELECT MAX(REV_STARS) 
+    	  FROM RATING)
+      ORDER BY MOV_TITLE;
+
+| MOV_TITLE | REV_STARS |
+| --------- | --------- |
+| ABC       | 5         |
+| RST       | 5         |
+
+---
+**Query #5**
+
+    UPDATE RATING R,MOVIES M,DIRECTOR D
+    SET REV_STARS=5
+    WHERE DIR_NAME='STEVEN SPIELBERG' AND D.DIR_ID=M.DIR_ID AND M.MOV_ID=R.MOV_ID;
+
+There are no results to be displayed.
+
+---
+**Query #6**
+
+    SELECT * FROM RATING;
+
+| mov_id | rev_stars |
+| ------ | --------- |
+| 501    | 3         |
+| 502    | 5         |
+| 503    | 2         |
+| 504    | 5         |
+| 505    | 4         |
+
+---
+**Query #7**
+
+    UPDATE RATING 
+    SET REV_STARS=5
+    WHERE MOV_ID IN(
+      	SELECT MOV_ID
+     	FROM MOVIES M,DIRECTOR D
+            WHERE DIR_NAME='STEVEN SPIELBERG' AND D.DIR_ID=M.DIR_ID);
+
+There are no results to be displayed.
+
+---
+**Query #8**
+
+    SELECT * FROM RATING;
+
+| mov_id | rev_stars |
+| ------ | --------- |
+| 501    | 3         |
+| 502    | 5         |
+| 503    | 2         |
+| 504    | 5         |
+| 505    | 4         |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/7)
