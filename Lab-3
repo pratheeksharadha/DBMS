@@ -66,6 +66,21 @@
 ---
 **Query #3**
 
+    SELECT act_id 
+    FROM MOVIES M JOIN MOVIE_CAST MC ON M.MOV_ID=MC.MOV_ID
+    WHERE MOV_YEAR<2000 and act_id in(
+    SELECT act_id 
+    FROM MOVIES M JOIN MOVIE_CAST MC ON M.MOV_ID=MC.MOV_ID
+    WHERE MOV_YEAR>2015);
+
+| act_id |
+| ------ |
+| 102    |
+| 103    |
+
+---
+**Query #4**
+
     SELECT MOV_TITLE,REV_STARS
     FROM MOVIES M,RATING R
     WHERE M.MOV_ID=R.MOV_ID AND REV_STARS>1
@@ -80,7 +95,7 @@
 | XYZ       | 3         |
 
 ---
-**Query #4**
+**Query #5**
 
     SELECT MOV_TITLE , REV_STARS
     FROM MOVIES M,RATING R
@@ -95,29 +110,7 @@
 | RST       | 5         |
 
 ---
-**Query #5**
-
-    UPDATE RATING R,MOVIES M,DIRECTOR D
-    SET REV_STARS=5
-    WHERE DIR_NAME='STEVEN SPIELBERG' AND D.DIR_ID=M.DIR_ID AND M.MOV_ID=R.MOV_ID;
-
-There are no results to be displayed.
-
----
 **Query #6**
-
-    SELECT * FROM RATING;
-
-| mov_id | rev_stars |
-| ------ | --------- |
-| 501    | 3         |
-| 502    | 5         |
-| 503    | 2         |
-| 504    | 5         |
-| 505    | 4         |
-
----
-**Query #7**
 
     UPDATE RATING 
     SET REV_STARS=5
@@ -129,7 +122,7 @@ There are no results to be displayed.
 There are no results to be displayed.
 
 ---
-**Query #8**
+**Query #7**
 
     SELECT * FROM RATING;
 
@@ -143,4 +136,4 @@ There are no results to be displayed.
 
 ---
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/7)
+[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/8)
