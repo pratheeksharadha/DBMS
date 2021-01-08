@@ -1,0 +1,13 @@
+**Schema (MySQL v5.7)**
+
+    create table DEPARTMENT(DNo integer, DName varchar(20), MgrSSN integer, MgrStartDate date,primary key(Dno,MgrSSN));
+    create table EMPLOYEE(SSN integer, FName varchar(10),Lname varchar(10), Address varchar(10),Sex varchar(10), Salary integer, SuperSSN integer, DNo integer,primary key(Ssn,Superssn,Dno),foreign key(Dno)references DEPARTMENT(DNo),foreign key(Superssn)references EMPLOYEE(SSN));
+    create table DLOCATION(DNo integer,DLoc varchar(10),foreign key(DNo)references DEPARTMENT(DNo));
+    create table PROJECT(PNo integer, PName varchar(10), PLocation varchar(10), DNo integer,primary key(PNo,DNo),foreign key(DNo)references DEPARTMENT(DNo));
+    create table WORKS_ON(SSN integer, PNo integer, Hours integer,primary key(SSN,PNo),foreign key(SSN)references EMPLOYEE(SSN)); 
+    
+
+---
+
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/tB48k4vrE8FeyKqEeDJtRh/0)
