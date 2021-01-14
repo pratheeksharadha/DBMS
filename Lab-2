@@ -3,57 +3,59 @@
     create table SALESMAN(salesman_id integer,name varchar(20),city varchar(20),commission integer,primary key(salesman_id));
     create table CUSTOMER(customer_id integer,cust_name varchar(20),city varchar(20),grade integer,salesman_id integer,primary key(customer_id),foreign key(salesman_id) references SALESMAN(salesman_id)on delete cascade);
     create table ORDERS(ord_no integer,purchase_amt integer,ord_date varchar(10),customer_id integer,salesman_id integer,primary key(ord_no),foreign key(customer_id) references CUSTOMER(customer_id) on delete cascade,foreign key(salesman_id) references SALESMAN(salesman_id)on delete cascade);
-    insert into SALESMAN values(10,'akash','manglore',2);
-    insert into SALESMAN values(20,'ram','banglore',10);
-    insert into SALESMAN values(30,'raj','manglore',5);
-    insert into SALESMAN values(40,'kiran','mysore',15);
-    insert into CUSTOMER values(1000,'avinash','manglore',100,10);
-    insert into CUSTOMER values(2000,'kumar','banglore',200,20);
-    insert into CUSTOMER values(3000,'preethi','mysore',300,40);
-    insert into CUSTOMER values(4000,'smitha','manglore',400,30);
-    insert into ORDERS values(551,500,'4-Jan-20',1000,10);
-    insert into ORDERS values(552,2500,'5-Feb-20',2000,20);
-    insert into ORDERS values(553,500,'3-Mar-20',3000,40);
-    insert into ORDERS values(554,1500,'2-Apr-20',4000,30);
-    insert into ORDERS values(555,2000,'3-Jun-20',2000,10);
+                                                                                                               
+    INSERT INTO SALESMAN VALUES(10,'AKASH','MANGALORE',2);
+    INSERT INTO SALESMAN VALUES(20,'RAM','BANGALORE',10);
+    INSERT INTO SALESMAN VALUES(30,'RAJ','MANGALORE',5);
+    INSERT INTO SALESMAN VALUES(40,'KIRAN','MYSORE',15);
+    INSERT INTO SALESMAN VALUES(50,'SHEYA','BANGALORE',3);
+    
+    INSERT INTO CUSTOMER VALUES(1000,'AVINASH','MANGALORE',400,10);
+    INSERT INTO CUSTOMER VALUES(2000,'KUMAR','BANGALORE',200,20);
+    INSERT INTO CUSTOMER VALUES(3000,'PREETHI','MYSORE',300,40);
+    INSERT INTO CUSTOMER VALUES(4000,'SMITHA','MANGALORE',400,30);
+    INSERT INTO CUSTOMER VALUES(5000,'VARSHINI','BANGALORE',400,50);
+    
+    INSERT INTO ORDERS VALUES(551,5000,'2020-01-04',1000,10);
+    INSERT INTO ORDERS VALUES(552,2500,'2020-02-05',2000,20);
+    INSERT INTO ORDERS VALUES(553,500,'2020-03-03',3000,40);
+    INSERT INTO ORDERS VALUES(554,1500,'2020-04-02',4000,30);
+    INSERT INTO ORDERS VALUES(555,2000,'2020-01-03',2000,10);
+    INSERT INTO ORDERS VALUES(556,3500,'2020-01-03',2000,30);
 
 ---
 
 **Query #1**
 
-    SELECT name , salesman_id
-        FROM SALESMAN S
-        WHERE 1<
-        (SELECT COUNT(*)
-         FROM ORDERS O
-         WHERE S.salesman_id=O.salesman_id);
+    SELECT grade,COUNT(*)
+        FROM CUSTOMER  
+        WHERE grade>
+        (SELECT AVG(grade) 
+         FROM CUSTOMER  
+         WHERE city='BANGALORE')
+        GROUP BY grade;
 
-| name  | salesman_id |
-| ----- | ----------- |
-| akash | 10          |
+| grade | COUNT(*) |
+| ----- | -------- |
+| 400   | 3        |
 
 ---
 **Query #2**
 
-    UPDATE CUSTOMER SET grade=400 WHERE customer_id=1000;
+    SELECT name , salesman_id
+            FROM SALESMAN S
+            WHERE 1<
+            (SELECT COUNT(*)
+             FROM ORDERS O
+             WHERE S.salesman_id=O.salesman_id);
 
-There are no results to be displayed.
+| name  | salesman_id |
+| ----- | ----------- |
+| AKASH | 10          |
+| RAJ   | 30          |
 
 ---
 **Query #3**
-
-    SELECT c.grade,COUNT(*)
-        FROM CUSTOMER c 
-        WHERE grade>
-        (SELECT AVG(grade) 
-         FROM CUSTOMER c 
-         WHERE c.city='BANGALORE')
-        GROUP BY c.grade;
-
-There are no results to be displayed.
-
----
-**Query #4**
 
     SELECT * 
         FROM SALESMAN
@@ -72,23 +74,39 @@ There are no results to be displayed.
            FROM CUSTOMER C 
            WHERE S.city=C.city AND S.salesman_id=C.salesman_id));
 
-| salesman_id | name  | city     | commission |
-| ----------- | ----- | -------- | ---------- |
-| 10          | akash | manglore | 2          |
-| 20          | ram   | banglore | 10         |
-| 30          | raj   | manglore | 5          |
-| 40          | kiran | mysore   | 15         |
+| salesman_id | name  | city      | commission |
+| ----------- | ----- | --------- | ---------- |
+| 10          | AKASH | MANGALORE | 2          |
+| 20          | RAM   | BANGALORE | 10         |
+| 30          | RAJ   | MANGALORE | 5          |
+| 40          | KIRAN | MYSORE    | 15         |
+| 50          | SHEYA | BANGALORE | 3          |
+
+---
+**Query #4**
+
+    CREATE VIEW Best_salesman AS
+        SELECT salesman_id,ord_date,purchase_amt
+        FROM ORDERS
+        where purchase_amt in(
+          select max(purchase_amt)
+          from ORDERS
+          GROUP BY ord_date);
+
+There are no results to be displayed.
 
 ---
 **Query #5**
 
-    CREATE VIEW V1 AS
-        SELECT salesman_id
-        FROM ORDERS
-        GROUP BY ord_date
-        HAVING MAX(ord_date);
+    select * from Best_salesman;
 
-There are no results to be displayed.
+| salesman_id | ord_date   | purchase_amt |
+| ----------- | ---------- | ------------ |
+| 10          | 2020-01-04 | 5000         |
+| 20          | 2020-02-05 | 2500         |
+| 40          | 2020-03-03 | 500          |
+| 30          | 2020-04-02 | 1500         |
+| 30          | 2020-01-03 | 3500         |
 
 ---
 **Query #6**
@@ -102,34 +120,37 @@ There are no results to be displayed.
 
     SELECT * FROM SALESMAN;
 
-| salesman_id | name  | city     | commission |
-| ----------- | ----- | -------- | ---------- |
-| 20          | ram   | banglore | 10         |
-| 30          | raj   | manglore | 5          |
-| 40          | kiran | mysore   | 15         |
+| salesman_id | name  | city      | commission |
+| ----------- | ----- | --------- | ---------- |
+| 20          | RAM   | BANGALORE | 10         |
+| 30          | RAJ   | MANGALORE | 5          |
+| 40          | KIRAN | MYSORE    | 15         |
+| 50          | SHEYA | BANGALORE | 3          |
 
 ---
 **Query #8**
 
     SELECT * FROM CUSTOMER;
 
-| customer_id | cust_name | city     | grade | salesman_id |
-| ----------- | --------- | -------- | ----- | ----------- |
-| 2000        | kumar     | banglore | 200   | 20          |
-| 3000        | preethi   | mysore   | 300   | 40          |
-| 4000        | smitha    | manglore | 400   | 30          |
+| customer_id | cust_name | city      | grade | salesman_id |
+| ----------- | --------- | --------- | ----- | ----------- |
+| 2000        | KUMAR     | BANGALORE | 200   | 20          |
+| 3000        | PREETHI   | MYSORE    | 300   | 40          |
+| 4000        | SMITHA    | MANGALORE | 400   | 30          |
+| 5000        | VARSHINI  | BANGALORE | 400   | 50          |
 
 ---
 **Query #9**
 
     SELECT * FROM ORDERS;
 
-| ord_no | purchase_amt | ord_date | customer_id | salesman_id |
-| ------ | ------------ | -------- | ----------- | ----------- |
-| 552    | 2500         | 5-Feb-20 | 2000        | 20          |
-| 553    | 500          | 3-Mar-20 | 3000        | 40          |
-| 554    | 1500         | 2-Apr-20 | 4000        | 30          |
+| ord_no | purchase_amt | ord_date   | customer_id | salesman_id |
+| ------ | ------------ | ---------- | ----------- | ----------- |
+| 552    | 2500         | 2020-02-05 | 2000        | 20          |
+| 553    | 500          | 2020-03-03 | 3000        | 40          |
+| 554    | 1500         | 2020-04-02 | 4000        | 30          |
+| 556    | 3500         | 2020-01-03 | 2000        | 30          |
 
 ---
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/2)
+[View on DB Fiddle](https://www.db-fiddle.com/f/iuJgd8fhMn1rWz9NBgdnHQ/3)
