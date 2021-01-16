@@ -1,13 +1,173 @@
 **Schema (MySQL v5.7)**
 
-    create table DEPARTMENT(DNo integer, DName varchar(20), MgrSSN integer, MgrStartDate date,primary key(Dno,MgrSSN));
-    create table EMPLOYEE(SSN integer, FName varchar(10),Lname varchar(10), Address varchar(10),Sex varchar(10), Salary integer, SuperSSN integer, DNo integer,primary key(Ssn,Superssn,Dno),foreign key(Dno)references DEPARTMENT(DNo),foreign key(Superssn)references EMPLOYEE(SSN));
+    create table DEPARTMENT(DNo integer, DName varchar(10), MgrSSN integer, MgrStartDate date,primary key(DNo,MgrSSN));
+    create table EMPLOYEE(SSN integer, FName varchar(20),LName varchar(20), Address varchar(20), Sex varchar(20), Salary integer, SuperSSN integer, DNo integer,primary key(Ssn,Superssn,DNo),foreign key(DNo) references DEPARTMENT(DNo),foreign key(SuperSSN)references EMPLOYEE(SSN));
     create table DLOCATION(DNo integer,DLoc varchar(10),foreign key(DNo)references DEPARTMENT(DNo));
-    create table PROJECT(PNo integer, PName varchar(10), PLocation varchar(10), DNo integer,primary key(PNo,DNo),foreign key(DNo)references DEPARTMENT(DNo));
-    create table WORKS_ON(SSN integer, PNo integer, Hours integer,primary key(SSN,PNo),foreign key(SSN)references EMPLOYEE(SSN)); 
-    
+    create table PROJECT(PNo integer, PName varchar(20), PLocation varchar(10), DNo integer,primary key(PNo,DNo),foreign key(DNo) references DEPARTMENT(DNo));
+     create table WORKS_ON(SSN integer, PNo integer, Hours integer,primary key(SSN,PNo),foreign key(SSN)references EMPLOYEE(SSN),foreign key(PNo)references PROJECT(PNo)); 
+    insert into DEPARTMENT values(1,'ACCOUNTS',101,'2001-01-01');
+    insert into DEPARTMENT values (2,'IT',102,'2001-02-01');
+    insert into DEPARTMENT values (3,'ECE',103,'2001-06-08');
+    insert into DEPARTMENT values(4,'ACCOUNTS',104,'2001-08-15');
+    insert into DEPARTMENT values(5,'CSE',105,'2001-06-02');
+    insert into EMPLOYEE values(101,'John','Scott','Banglore','Male',650000,101,3);
+    insert into EMPLOYEE values(102,'James','Smith','Banglore','Male',630000,102,3);
+    insert into EMPLOYEE values(103,'Pavan' ,'Hegde','Manglore','Male',620000,103,3);
+    insert into EMPLOYEE values(104,'Veena','shetty','Banglore','Female',750000,104,3);
+    insert into EMPLOYEE values(105,'Edward','Scott','Banglore','Male',650000,105,3);
+    insert into EMPLOYEE values(106,'vinuta','jogi','Banglore','Female',650000,105,1);
+    insert into EMPLOYEE values(107,'vijeth','jogi','Manglore','Male',650000,105,4);
+    insert into DLOCATION values(1,'BANGALORE');
+    insert into DLOCATION values(2,'BANGALORE');
+    insert into DLOCATION values(3,'BANGALORE');
+    insert into DLOCATION values(4,'MANGALORE');
+    insert into DLOCATION values(5,'MANGALORE');
+    insert into PROJECT values(200,'IOT','BANGALORE',5);
+    insert into PROJECT values(201,'CLOUD','BANGALORE',3);
+    insert into PROJECT values(202,'BIGDATA','BANGALORE',1);
+    insert into PROJECT values(203,'SENSORS','BANGALORE',2);
+    insert into PROJECT values(204,'BANK MANAGEMENT','BANGALORE',4); 
+    insert into WORKS_ON values(105, 201, 4);
+    insert into WORKS_ON values(103, 203, 6);
+    insert into WORKS_ON values(101, 200,8);
+    insert into WORKS_ON values(104, 202,10);
+    insert into WORKS_ON values(102, 204, 3);
 
 ---
 
+**Query #1**
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/tB48k4vrE8FeyKqEeDJtRh/0)
+    (select distinct PNo
+    from PROJECT P,DEPARTMENT D,EMPLOYEE E
+    where P.DNo=D.DNo and SSN=MgrSSN AND Lname='Scott')
+    union
+    (select distinct P.PNo
+    from PROJECT P,WORKS_ON W,EMPLOYEE E
+    where P.PNo=W.PNo and W.SSN=E.SSN AND Lname='Scott');
+
+| PNo |
+| --- |
+| 202 |
+| 200 |
+| 201 |
+
+---
+**Query #2**
+
+    select FName,LName,Salary "Old Salary",Salary*1.1"New Salary"
+    from EMPLOYEE E,WORKS_ON W,PROJECT P
+    where E.SSN=W.SSN
+    AND W.PNo=P.PNo
+    and PName='IOT';
+
+| FName | LName | Old Salary | New Salary |
+| ----- | ----- | ---------- | ---------- |
+| John  | Scott | 650000     | 715000.0   |
+
+---
+**Query #3**
+
+    select sum(Salary)"Total Salary",Max(Salary)"Maximum Salary",min(Salary)"Minimun Salary",avg(Salary)"Average Salary"
+    from EMPLOYEE E,DEPARTMENT D
+    WHERE E.DNo=D.DNo
+    and DName='ACCOUNTS';
+
+| Total Salary | Maximum Salary | Minimun Salary | Average Salary |
+| ------------ | -------------- | -------------- | -------------- |
+| 1300000      | 650000         | 650000         | 650000.0000    |
+
+---
+**Query #4**
+
+    select SSN 
+    from EMPLOYEE E
+    where not exists(
+      select PNo from PROJECT where DNo=5 and PNo not in 
+      (select PNo from WORKS_ON W where W.SSN=E.SSN));
+
+| SSN |
+| --- |
+| 101 |
+
+---
+**Query #5**
+
+    select DNo,count(*)"no of emps more than 600000"
+       from EMPLOYEE
+       where salary>600000
+       and DNo in (select DNo from EMPLOYEE group by DNo having count(*)>=5) group by DNo;
+
+| DNo | no of emps more than 600000 |
+| --- | --------------------------- |
+| 3   | 5                           |
+
+---
+**Query #6**
+
+    select * from DEPARTMENT;
+
+| DNo | DName    | MgrSSN | MgrStartDate |
+| --- | -------- | ------ | ------------ |
+| 1   | ACCOUNTS | 101    | 2001-01-01   |
+| 2   | IT       | 102    | 2001-02-01   |
+| 3   | ECE      | 103    | 2001-06-08   |
+| 4   | ACCOUNTS | 104    | 2001-08-15   |
+| 5   | CSE      | 105    | 2001-06-02   |
+
+---
+**Query #7**
+
+    select * from EMPLOYEE;
+
+| SSN | FName  | LName  | Address  | Sex    | Salary | SuperSSN | DNo |
+| --- | ------ | ------ | -------- | ------ | ------ | -------- | --- |
+| 101 | John   | Scott  | Banglore | Male   | 650000 | 101      | 3   |
+| 102 | James  | Smith  | Banglore | Male   | 630000 | 102      | 3   |
+| 103 | Pavan  | Hegde  | Manglore | Male   | 620000 | 103      | 3   |
+| 104 | Veena  | shetty | Banglore | Female | 750000 | 104      | 3   |
+| 105 | Edward | Scott  | Banglore | Male   | 650000 | 105      | 3   |
+| 106 | vinuta | jogi   | Banglore | Female | 650000 | 105      | 1   |
+| 107 | vijeth | jogi   | Manglore | Male   | 650000 | 105      | 4   |
+
+---
+**Query #8**
+
+    select * from DLOCATION;
+
+| DNo | DLoc      |
+| --- | --------- |
+| 1   | BANGALORE |
+| 2   | BANGALORE |
+| 3   | BANGALORE |
+| 4   | MANGALORE |
+| 5   | MANGALORE |
+
+---
+**Query #9**
+
+    select * from PROJECT;
+
+| PNo | PName           | PLocation | DNo |
+| --- | --------------- | --------- | --- |
+| 200 | IOT             | BANGALORE | 5   |
+| 201 | CLOUD           | BANGALORE | 3   |
+| 202 | BIGDATA         | BANGALORE | 1   |
+| 203 | SENSORS         | BANGALORE | 2   |
+| 204 | BANK MANAGEMENT | BANGALORE | 4   |
+
+---
+**Query #10**
+
+    select * from WORKS_ON;
+
+| SSN | PNo | Hours |
+| --- | --- | ----- |
+| 101 | 200 | 8     |
+| 102 | 204 | 3     |
+| 103 | 203 | 6     |
+| 104 | 202 | 10    |
+| 105 | 201 | 4     |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/tB48k4vrE8FeyKqEeDJtRh/2)
