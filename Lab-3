@@ -14,7 +14,7 @@
     insert into DIRECTOR values(12,'Suhan','9274997667');
     insert into DIRECTOR values(13,'Swarna','8847562537');
     insert into DIRECTOR values(14,'Hitchcock','7547569357');
-    insert into DIRECTOR values(15,'Sujith','7656562227');
+    insert into DIRECTOR values(15,'STEVEN SPIELBERG','7656562227');
     insert into MOVIES values(501,'XYZ',2000,'english',11);
     insert into MOVIES values(502,'ABC',2017,'hindi',13);
     insert into MOVIES values(503,'PQR',2003,'kannada',11);
@@ -117,7 +117,7 @@
     WHERE MOV_ID IN(
       	SELECT MOV_ID
      	FROM MOVIES M,DIRECTOR D
-            WHERE DIR_NAME='STEVEN SPIELBERG' AND D.DIR_ID=M.DIR_ID);
+            WHERE M.DIR_ID=D.DIR_ID and D.DIR_NAME='STEVEN SPIELBERG' and M.DIR_ID=D.DIR_ID);
 
 There are no results to be displayed.
 
@@ -132,8 +132,8 @@ There are no results to be displayed.
 | 502    | 5         |
 | 503    | 2         |
 | 504    | 5         |
-| 505    | 4         |
+| 505    | 5         |
 
 ---
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/8)
+[View on DB Fiddle](https://www.db-fiddle.com/f/orkaMH8n3eyi5de8WyE414/9)
