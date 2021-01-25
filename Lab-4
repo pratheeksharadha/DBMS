@@ -8,12 +8,12 @@
     insert into STUDENT values('1BT15CS101','Sharan','Manglore',9696500000,'Male');
     insert into STUDENT values ('1BT15CS102','Preethi','Banglore',9496500000,'Female');
     INSERT INTO STUDENT VALUES('1BT15CS103','Sahana','Mysore',9696400000,'Female');
-    INSERT INTO STUDENT VALUES('1BT15CS104','Sanvi','Manglore',9697500000,'MALE');
+    INSERT INTO STUDENT VALUES('1BT15CS104','Sanvi','Manglore',9697500000,'Female');
     INSERT INTO STUDENT VALUES('1BT15CS105','Kartik','Banglore',9698500000,'Male');
     
-    insert into SEMSEC values(111,4,'C');
+    insert into SEMSEC values(111,8,'C');
     insert into SEMSEC values(112,3,'A');
-    insert into SEMSEC values(113,5,'C');
+    insert into SEMSEC values(113,4,'C');
     insert into SEMSEC values(114,4,'C');
     insert into SEMSEC values(115,8,'B');
     
@@ -29,70 +29,21 @@
     insert into COURSE values('15CS54','ME',5,3);
     insert into COURSE values('15CS55','CNS',5,4);
     
-    insert into IAMARKS values('1BT15CS101','15CS51',113,50,46,47,48);
-    insert into IAMARKS values('1BT15CS101','15CS52',113,40,40,47,42);
-    insert into IAMARKS values('1BT15CS101','15CS53',113,50,40,45,45);
-    insert into IAMARKS values('1BT15CS101','15CS54',113,40,46,41,42);
-    insert into IAMARKS values('1BT15CS101','15CS55',113,50,46,40,45);
-    insert into IAMARKS values('1BT15CS103','15CS51',111,45,42,44,44);
-    insert into IAMARKS values('1BT15CS103','15CS52',111,41,47,43,44);
-    insert into IAMARKS values('1BT15CS103','15CS53',111,38,42,41,40);
-    insert into IAMARKS values('1BT15CS103','15CS54',111,35,45,40,40);
-    insert into IAMARKS values('1BT15CS103','15CS55',111,49,46,40,42);
+    insert into IAMARKS values('1BT15CS101','15CS51',113,15,17,18,18);
+    insert into IAMARKS values('1BT15CS101','15CS52',113,10,13,08,12);
+    insert into IAMARKS values('1BT15CS101','15CS53',113,15,10,10,13);
+    insert into IAMARKS values('1BT15CS101','15CS54',113,09,11,14,NULL);
+    insert into IAMARKS values('1BT15CS101','15CS55',113,09,13,16,15);
+    insert into IAMARKS values('1BT15CS103','15CS51',111,14,15,16,NULL);
+    insert into IAMARKS values('1BT15CS103','15CS52',111,20,16,12,18);
+    insert into IAMARKS values('1BT15CS103','15CS53',111,18,12,11,15);
+    insert into IAMARKS values('1BT15CS103','15CS54',111,15,15,10,15);
+    insert into IAMARKS values('1BT15CS103','15CS55',111,19,16,10,NULL);
     
 
 ---
 
 **Query #1**
-
-    select * 
-    from STUDENT S,SEMSEC SS,CLASS C
-    where S.usn=C.usn and C.ssid=SS.SSID and SS.sem=4
-    and SS.sec='C';
-
-| usn        | sname  | address  | phone      | gender | ssid | sem | sec | usn        | ssid |
-| ---------- | ------ | -------- | ---------- | ------ | ---- | --- | --- | ---------- | ---- |
-| 1BT15CS101 | Sharan | Manglore | 9696500000 | Male   | 111  | 4   | C   | 1BT15CS101 | 111  |
-| 1BT15CS104 | Sanvi  | Manglore | 9697500000 | MALE   | 114  | 4   | C   | 1BT15CS104 | 114  |
-
----
-**Query #2**
-
-    select sem,sec,gender,count(*)
-    from STUDENT S,SEMSEC SS,CLASS C
-    where S.usn=C.usn AND C.ssid=SS.ssid
-    group by sem,sec,gender
-    order by sem;
-
-| sem | sec | gender | count(*) |
-| --- | --- | ------ | -------- |
-| 3   | A   | Female | 1        |
-| 4   | C   | Male   | 2        |
-| 5   | C   | Female | 1        |
-| 8   | B   | Male   | 1        |
-
----
-**Query #3**
-
-    create view test1_marks as
-    select S.usn,S.sname,IA.subcode,title,test1
-    from STUDENT S,IAMARKS IA,COURSE C
-    where S.usn=IA.usn
-    and IA.subcode=C.subcode
-    and  S.usn='1BT15CS101';
-
-There are no results to be displayed.
-
----
-**Query #4**
-
-    update IAMARKS
-    set finalia=((test1+test2+test3)-least(test1,test2,test3))/2;
-
-There are no results to be displayed.
-
----
-**Query #5**
 
     select * from STUDENT;
 
@@ -101,24 +52,24 @@ There are no results to be displayed.
 | 1BT15CS101 | Sharan  | Manglore | 9696500000 | Male   |
 | 1BT15CS102 | Preethi | Banglore | 9496500000 | Female |
 | 1BT15CS103 | Sahana  | Mysore   | 9696400000 | Female |
-| 1BT15CS104 | Sanvi   | Manglore | 9697500000 | MALE   |
+| 1BT15CS104 | Sanvi   | Manglore | 9697500000 | Female |
 | 1BT15CS105 | Kartik  | Banglore | 9698500000 | Male   |
 
 ---
-**Query #6**
+**Query #2**
 
     select * from SEMSEC;
 
 | ssid | sem | sec |
 | ---- | --- | --- |
-| 111  | 4   | C   |
+| 111  | 8   | C   |
 | 112  | 3   | A   |
-| 113  | 5   | C   |
+| 113  | 4   | C   |
 | 114  | 4   | C   |
 | 115  | 8   | B   |
 
 ---
-**Query #7**
+**Query #3**
 
     select * from CLASS;
 
@@ -131,7 +82,7 @@ There are no results to be displayed.
 | 1BT15CS105 | 115  |
 
 ---
-**Query #8**
+**Query #4**
 
     select * from COURSE;
 
@@ -144,24 +95,193 @@ There are no results to be displayed.
 | 15CS55  | CNS   | 5   | 4       |
 
 ---
-**Query #9**
+**Query #5**
 
     select * from IAMARKS;
 
 | usn        | subcode | ssid | test1 | test2 | test3 | finalia |
 | ---------- | ------- | ---- | ----- | ----- | ----- | ------- |
-| 1BT15CS101 | 15CS51  | 113  | 50    | 46    | 47    | 49      |
-| 1BT15CS101 | 15CS52  | 113  | 40    | 40    | 47    | 44      |
-| 1BT15CS101 | 15CS53  | 113  | 50    | 40    | 45    | 48      |
-| 1BT15CS101 | 15CS54  | 113  | 40    | 46    | 41    | 44      |
-| 1BT15CS101 | 15CS55  | 113  | 50    | 46    | 40    | 48      |
-| 1BT15CS103 | 15CS51  | 111  | 45    | 42    | 44    | 45      |
-| 1BT15CS103 | 15CS52  | 111  | 41    | 47    | 43    | 45      |
-| 1BT15CS103 | 15CS53  | 111  | 38    | 42    | 41    | 42      |
-| 1BT15CS103 | 15CS54  | 111  | 35    | 45    | 40    | 43      |
-| 1BT15CS103 | 15CS55  | 111  | 49    | 46    | 40    | 48      |
+| 1BT15CS101 | 15CS51  | 113  | 15    | 17    | 18    | 18      |
+| 1BT15CS101 | 15CS52  | 113  | 10    | 13    | 8     | 12      |
+| 1BT15CS101 | 15CS53  | 113  | 15    | 10    | 10    | 13      |
+| 1BT15CS101 | 15CS54  | 113  | 9     | 11    | 14    |         |
+| 1BT15CS101 | 15CS55  | 113  | 9     | 13    | 16    | 15      |
+| 1BT15CS103 | 15CS51  | 111  | 14    | 15    | 16    |         |
+| 1BT15CS103 | 15CS52  | 111  | 20    | 16    | 12    | 18      |
+| 1BT15CS103 | 15CS53  | 111  | 18    | 12    | 11    | 15      |
+| 1BT15CS103 | 15CS54  | 111  | 15    | 15    | 10    | 15      |
+| 1BT15CS103 | 15CS55  | 111  | 19    | 16    | 10    |         |
+
+---
+**Query #6**
+
+    select * 
+    from STUDENT S,SEMSEC SS,CLASS C
+    where S.usn=C.usn and C.ssid=SS.SSID and SS.sem=4
+    and SS.sec='C';
+
+| usn        | sname  | address  | phone      | gender | ssid | sem | sec | usn        | ssid |
+| ---------- | ------ | -------- | ---------- | ------ | ---- | --- | --- | ---------- | ---- |
+| 1BT15CS103 | Sahana | Mysore   | 9696400000 | Female | 113  | 4   | C   | 1BT15CS103 | 113  |
+| 1BT15CS104 | Sanvi  | Manglore | 9697500000 | Female | 114  | 4   | C   | 1BT15CS104 | 114  |
+
+---
+**Query #7**
+
+    select sem,sec,gender,count(*)
+    from STUDENT S,SEMSEC SS,CLASS C
+    where S.usn=C.usn AND C.ssid=SS.ssid
+    group by sem,sec,gender
+    order by sem;
+
+| sem | sec | gender | count(*) |
+| --- | --- | ------ | -------- |
+| 3   | A   | Female | 1        |
+| 4   | C   | Female | 2        |
+| 8   | B   | Male   | 1        |
+| 8   | C   | Male   | 1        |
+
+---
+**Query #8**
+
+    create view test1_marks as
+    select S.usn,S.sname,IA.subcode,title,test1
+    from STUDENT S,IAMARKS IA,COURSE C
+    where S.usn=IA.usn
+    and IA.subcode=C.subcode
+    and  S.usn='1BT15CS101';
+
+There are no results to be displayed.
+
+---
+**Query #9**
+
+    select * from test1_marks;
+
+| usn        | sname  | subcode | title | test1 |
+| ---------- | ------ | ------- | ----- | ----- |
+| 1BT15CS101 | Sharan | 15CS51  | ATC   | 15    |
+| 1BT15CS101 | Sharan | 15CS52  | DBMS  | 10    |
+| 1BT15CS101 | Sharan | 15CS53  | UP    | 15    |
+| 1BT15CS101 | Sharan | 15CS54  | ME    | 9     |
+| 1BT15CS101 | Sharan | 15CS55  | CNS   | 9     |
+
+---
+**Query #10**
+
+    update IAMARKS
+    set finalia=((test1+test2+test3)-least(test1,test2,test3))/2;
+
+There are no results to be displayed.
+
+---
+**Query #11**
+
+    select * from IAMARKS;
+
+| usn        | subcode | ssid | test1 | test2 | test3 | finalia |
+| ---------- | ------- | ---- | ----- | ----- | ----- | ------- |
+| 1BT15CS101 | 15CS51  | 113  | 15    | 17    | 18    | 18      |
+| 1BT15CS101 | 15CS52  | 113  | 10    | 13    | 8     | 12      |
+| 1BT15CS101 | 15CS53  | 113  | 15    | 10    | 10    | 13      |
+| 1BT15CS101 | 15CS54  | 113  | 9     | 11    | 14    | 13      |
+| 1BT15CS101 | 15CS55  | 113  | 9     | 13    | 16    | 15      |
+| 1BT15CS103 | 15CS51  | 111  | 14    | 15    | 16    | 16      |
+| 1BT15CS103 | 15CS52  | 111  | 20    | 16    | 12    | 18      |
+| 1BT15CS103 | 15CS53  | 111  | 18    | 12    | 11    | 15      |
+| 1BT15CS103 | 15CS54  | 111  | 15    | 15    | 10    | 15      |
+| 1BT15CS103 | 15CS55  | 111  | 19    | 16    | 10    | 18      |
+
+---
+**Query #12**
+
+    SELECT S.USN,SNAME,FINALIA,
+         (CASE
+          	WHEN FINALIA>=17 AND FINALIA<=20 THEN "OUTSTANDING"
+            WHEN FINALIA>=12 AND FINALIA<=17 THEN "AVEREGE"
+            WHEN FINALIA<=12 THEN "WEAK"
+          END)CAT
+          FROM STUDENT S,IAMARKS IA,CLASS C,SEMSEC SC
+          WHERE S.USN=IA.USN AND S.USN=C.USN AND C.SSID=SC.SSID AND SEM=8 AND (SEC='A' OR SEC='B' OR SEC='C');
+
+| USN        | SNAME  | FINALIA | CAT         |
+| ---------- | ------ | ------- | ----------- |
+| 1BT15CS101 | Sharan | 18      | OUTSTANDING |
+| 1BT15CS101 | Sharan | 12      | AVEREGE     |
+| 1BT15CS101 | Sharan | 13      | AVEREGE     |
+| 1BT15CS101 | Sharan | 13      | AVEREGE     |
+| 1BT15CS101 | Sharan | 15      | AVEREGE     |
+
+---
+**Query #13**
+
+    select * from STUDENT;
+
+| usn        | sname   | address  | phone      | gender |
+| ---------- | ------- | -------- | ---------- | ------ |
+| 1BT15CS101 | Sharan  | Manglore | 9696500000 | Male   |
+| 1BT15CS102 | Preethi | Banglore | 9496500000 | Female |
+| 1BT15CS103 | Sahana  | Mysore   | 9696400000 | Female |
+| 1BT15CS104 | Sanvi   | Manglore | 9697500000 | Female |
+| 1BT15CS105 | Kartik  | Banglore | 9698500000 | Male   |
+
+---
+**Query #14**
+
+    select * from SEMSEC;
+
+| ssid | sem | sec |
+| ---- | --- | --- |
+| 111  | 8   | C   |
+| 112  | 3   | A   |
+| 113  | 4   | C   |
+| 114  | 4   | C   |
+| 115  | 8   | B   |
+
+---
+**Query #15**
+
+    select * from CLASS;
+
+| usn        | ssid |
+| ---------- | ---- |
+| 1BT15CS101 | 111  |
+| 1BT15CS102 | 112  |
+| 1BT15CS103 | 113  |
+| 1BT15CS104 | 114  |
+| 1BT15CS105 | 115  |
+
+---
+**Query #16**
+
+    select * from COURSE;
+
+| subcode | title | sem | credits |
+| ------- | ----- | --- | ------- |
+| 15CS51  | ATC   | 5   | 3       |
+| 15CS52  | DBMS  | 5   | 4       |
+| 15CS53  | UP    | 5   | 2       |
+| 15CS54  | ME    | 5   | 3       |
+| 15CS55  | CNS   | 5   | 4       |
+
+---
+**Query #17**
+
+    select * from IAMARKS;
+
+| usn        | subcode | ssid | test1 | test2 | test3 | finalia |
+| ---------- | ------- | ---- | ----- | ----- | ----- | ------- |
+| 1BT15CS101 | 15CS51  | 113  | 15    | 17    | 18    | 18      |
+| 1BT15CS101 | 15CS52  | 113  | 10    | 13    | 8     | 12      |
+| 1BT15CS101 | 15CS53  | 113  | 15    | 10    | 10    | 13      |
+| 1BT15CS101 | 15CS54  | 113  | 9     | 11    | 14    | 13      |
+| 1BT15CS101 | 15CS55  | 113  | 9     | 13    | 16    | 15      |
+| 1BT15CS103 | 15CS51  | 111  | 14    | 15    | 16    | 16      |
+| 1BT15CS103 | 15CS52  | 111  | 20    | 16    | 12    | 18      |
+| 1BT15CS103 | 15CS53  | 111  | 18    | 12    | 11    | 15      |
+| 1BT15CS103 | 15CS54  | 111  | 15    | 15    | 10    | 15      |
+| 1BT15CS103 | 15CS55  | 111  | 19    | 16    | 10    | 18      |
 
 ---
 
-[View on DB Fiddle](https://www.db-fiddle.com/f/oCUKvgFdpgXCM4HWLdX813/5)
- 
+[View on DB Fiddle](https://www.db-fiddle.com/f/oCUKvgFdpgXCM4HWLdX813/7)
